@@ -1825,10 +1825,10 @@ DLAJSON
 					'@type'      => 'FAQPage',
 					'mainEntity' => $ld,
 				),
-				JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+				JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES // sem JSON_UNESCAPED_UNICODE: só ASCII dentro de <script> (o servidor troca acentos por entidades)
 			) . '</script>';
 		}
-		$h[] = '<script type="application/json" id="dlo-dados">' . json_encode( $js, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>';
+		$h[] = '<script type="application/json" id="dlo-dados">' . json_encode( $js, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES ) . '</script>';
 		$h[] = '<script>' . dla_orcamento_js() . '</script></div>';
 		return implode( "\n", $h );
 	}
@@ -1874,11 +1874,11 @@ DLAJSON
 	function dla_orcamento_js() {
 		return <<<'DLAJS'
 /*
- * Dedicada Lavanderia · Orçamento rápido (página /orcamento/, shortcode [dedicada_orcamento])
- * Vai embutido no snippet do agente (agente-ia/fonte/agente.php); os preços vêm da mesma tabela.
- * A lista de peças, os preços e o botão do WhatsApp já chegam prontos no HTML: este código só
- * soma, sugere o pacote, mostra a coleta do bairro e monta a mensagem com o código SITE-.
- * Nenhum dado pessoal é pedido nem guardado.
+ * Dedicada Lavanderia \u00b7 Or\u00e7amento r\u00e1pido (p\u00e1gina /orcamento/, shortcode [dedicada_orcamento])
+ * Vai embutido no snippet do agente (agente-ia/fonte/agente.php); os pre\u00e7os v\u00eam da mesma tabela.
+ * A lista de pe\u00e7as, os pre\u00e7os e o bot\u00e3o do WhatsApp j\u00e1 chegam prontos no HTML: este c\u00f3digo s\u00f3
+ * soma, sugere o pacote, mostra a coleta do bairro e monta a mensagem com o c\u00f3digo SITE-.
+ * Nenhum dado pessoal \u00e9 pedido nem guardado.
  */
 (function () {
   'use strict';
@@ -1913,7 +1913,7 @@ DLAJSON
     return 'R$ ' + s[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + s[1];
   }
   function normal(s) {
-    return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
   function minuscula(s) { return s.charAt(0).toLowerCase() + s.slice(1); }
   function esc(s) {
@@ -1923,7 +1923,7 @@ DLAJSON
     try { if (typeof window.gtag === 'function') window.gtag('event', nome, params); } catch (e) { /* sem GA4 */ }
   }
 
-  /* Pacotes: os créditos vão para as peças mais caras; o resto, avulso. Igual ao agente. */
+  /* Pacotes: os cr\u00e9ditos v\u00e3o para as pe\u00e7as mais caras; o resto, avulso. Igual ao agente. */
   function melhorPacote(precos) {
     var n = precos.length;
     if (n < 10) return null;
@@ -1944,7 +1944,7 @@ DLAJSON
     var partes = [];
     [[50, 'c'], [25, 'b'], [10, 'a']].forEach(function (x) {
       var q = melhor[x[1]];
-      if (q) partes.push((q > 1 ? q + ' pacotes' : '1 pacote') + ' de ' + x[0] + ' peças (' + reais(op[x[0]]) + (q > 1 ? ' cada' : '') + ')');
+      if (q) partes.push((q > 1 ? q + ' pacotes' : '1 pacote') + ' de ' + x[0] + ' pe\u00e7as (' + reais(op[x[0]]) + (q > 1 ? ' cada' : '') + ')');
     });
     return { texto: partes.join(' e '), avulsas: melhor.avulsas, total: arred(melhor.total), economia: arred(resto[0] - melhor.total) };
   }
@@ -1986,11 +1986,11 @@ DLAJSON
 
   function mensagem(r, info) {
     var partes = r.linhas.map(function (l) {
-      return l.it.u === 'quilo' ? String(l.q).replace('.', ',') + ' kg de ' + minuscula(l.it.c) : l.q + ' × ' + minuscula(l.it.c);
+      return l.it.u === 'quilo' ? String(l.q).replace('.', ',') + ' kg de ' + minuscula(l.it.c) : l.q + ' \u00d7 ' + minuscula(l.it.c);
     });
-    var m = partes.length ? 'Olá! Quero um orçamento (código ' + codigo + '): ' + partes.join('; ') + '.' : 'Olá! Quero um orçamento (código ' + codigo + ').';
+    var m = partes.length ? 'Ol\u00e1! Quero um or\u00e7amento (c\u00f3digo ' + codigo + '): ' + partes.join('; ') + '.' : 'Ol\u00e1! Quero um or\u00e7amento (c\u00f3digo ' + codigo + ').';
     if (info && info.b) m += ' Bairro: ' + info.b.n + '.';
-    if (info && info.loja) m += ' Vou levar à loja.';
+    if (info && info.loja) m += ' Vou levar \u00e0 loja.';
     if (r.expresso && r.linhas.length) m += ' Com expresso.';
     if (r.total > 0) m += ' Estimativa a partir de ' + reais(r.total) + '.';
     return m;
@@ -1999,35 +1999,35 @@ DLAJSON
   function mostrar() {
     var r = calcular(), info = infoBairro(), h = [];
     if (!r.linhas.length) {
-      h.push('<p class="dlo-vazio">Escolha as peças e as quantidades para ver a estimativa.</p>');
+      h.push('<p class="dlo-vazio">Escolha as pe\u00e7as e as quantidades para ver a estimativa.</p>');
     } else {
-      h.push('<h3>Seu orçamento preliminar</h3><ul class="dlo-linhas">');
+      h.push('<h3>Seu or\u00e7amento preliminar</h3><ul class="dlo-linhas">');
       r.linhas.forEach(function (l) {
-        var qtd = l.it.u === 'quilo' ? String(l.q).replace('.', ',') + ' kg de ' + minuscula(l.it.c) : l.q + ' × ' + l.it.c;
+        var qtd = l.it.u === 'quilo' ? String(l.q).replace('.', ',') + ' kg de ' + minuscula(l.it.c) : l.q + ' \u00d7 ' + l.it.c;
         h.push('<li><span>' + esc(qtd) + (l.exp ? ' <em>(expresso)</em>' : '') + '</span><strong>' + reais(l.sub) + '</strong></li>');
       });
       h.push('</ul><p class="dlo-total">Total estimado: a partir de <strong>' + reais(r.total) + '</strong></p>');
       if (r.expresso && r.semExp.length) h.push('<p class="dlo-aviso">Sem expresso (prazo normal): ' + esc(r.semExp.join(', ')) + '.</p>');
       if (r.expresso) h.push('<p>' + esc(D.textos.expresso) + '</p>');
-      if (r.prazo) h.push('<p>Prazo: até ' + r.prazo + ' dias úteis (o sábado conta), contados do dia em que as peças entram na loja.</p>');
+      if (r.prazo) h.push('<p>Prazo: at\u00e9 ' + r.prazo + ' dias \u00fateis (o s\u00e1bado conta), contados do dia em que as pe\u00e7as entram na loja.</p>');
       if (r.pacote) {
-        h.push('<p class="dlo-pacote">Com ' + esc(r.pacote.texto) + (r.pacote.avulsas ? (r.pacote.avulsas === 1 ? ' e 1 peça avulsa' : ' e ' + r.pacote.avulsas + ' peças avulsas') : '') +
-          ', as peças do dia a dia saem por <strong>' + reais(r.pacote.total) + '</strong>, ' + reais(r.pacote.economia) + ' a menos. O crédito do pacote vale por ' + D.validade + ' dias.</p>');
+        h.push('<p class="dlo-pacote">Com ' + esc(r.pacote.texto) + (r.pacote.avulsas ? (r.pacote.avulsas === 1 ? ' e 1 pe\u00e7a avulsa' : ' e ' + r.pacote.avulsas + ' pe\u00e7as avulsas') : '') +
+          ', as pe\u00e7as do dia a dia saem por <strong>' + reais(r.pacote.total) + '</strong>, ' + reais(r.pacote.economia) + ' a menos. O cr\u00e9dito do pacote vale por ' + D.validade + ' dias.</p>');
       }
     }
     if (info && info.rota) {
-      h.push('<p class="dlo-coleta">Coleta e entrega grátis ' + esc(info.b.o) + ': ' + esc(info.rota.d) + '. Pedidos pelo WhatsApp até as ' + esc(info.rota.a) + ' entram na coleta do mesmo dia.' + (info.b.obs ? ' ' + esc(info.b.obs) : '') + '</p>');
+      h.push('<p class="dlo-coleta">Coleta e entrega gr\u00e1tis ' + esc(info.b.o) + ': ' + esc(info.rota.d) + '. Pedidos pelo WhatsApp at\u00e9 as ' + esc(info.rota.a) + ' entram na coleta do mesmo dia.' + (info.b.obs ? ' ' + esc(info.b.obs) : '') + '</p>');
     } else if (info && info.fora) {
-      h.push('<p class="dlo-coleta">No momento, as rotas de coleta não passam ' + esc(info.b.o) + '. Dá para deixar e retirar a roupa numa das duas lojas, pelos mesmos preços.</p>');
+      h.push('<p class="dlo-coleta">No momento, as rotas de coleta n\u00e3o passam ' + esc(info.b.o) + '. D\u00e1 para deixar e retirar a roupa numa das duas lojas, pelos mesmos pre\u00e7os.</p>');
     } else if (info && info.loja) {
       h.push('<p class="dlo-coleta">' + esc(D.textos.lojas) + '</p>');
     }
     if (r.linhas.length) {
-      h.push('<p class="dlo-nota">Valores “a partir de”, confirmados na vistoria da peça, antes de começar. Tabela conferida em ' + esc(D.conferido) + '.</p>');
-      h.push('<p class="dlo-codigo">Código do orçamento: <strong>' + esc(codigo) + '</strong></p>');
+      h.push('<p class="dlo-nota">Valores \u201ca partir de\u201d, confirmados na vistoria da pe\u00e7a, antes de come\u00e7ar. Tabela conferida em ' + esc(D.conferido) + '.</p>');
+      h.push('<p class="dlo-codigo">C\u00f3digo do or\u00e7amento: <strong>' + esc(codigo) + '</strong></p>');
     }
     saida.innerHTML = h.join('');
-    if (barraTotal) barraTotal.textContent = r.linhas.length ? 'A partir de ' + reais(r.total) : 'Monte o orçamento';
+    if (barraTotal) barraTotal.textContent = r.linhas.length ? 'A partir de ' + reais(r.total) : 'Monte o or\u00e7amento';
     var url = 'https://wa.me/' + D.whatsapp + '?text=' + encodeURIComponent(mensagem(r, info));
     botoes.forEach(function (b) { b.setAttribute('href', url); });
     raiz.setAttribute('data-total', r.total);
@@ -2045,7 +2045,7 @@ DLAJSON
     }, 2000);
   }
 
-  /* Botões − e + */
+  /* Bot\u00f5es \u2212 e + */
   raiz.addEventListener('click', function (ev) {
     var alvo = ev.target.closest ? ev.target.closest('button[data-passo]') : null;
     if (!alvo) return;
@@ -2059,7 +2059,7 @@ DLAJSON
   if (bairro) bairro.addEventListener('change', mostrar);
   if (expresso) expresso.addEventListener('change', mostrar);
 
-  /* Procurar peça */
+  /* Procurar pe\u00e7a */
   if (busca) {
     busca.addEventListener('input', function () {
       var t = normal(busca.value).trim();
@@ -2076,7 +2076,7 @@ DLAJSON
     });
   }
 
-  /* WhatsApp: GA4 conta o clique e o lead, com o código de origem */
+  /* WhatsApp: GA4 conta o clique e o lead, com o c\u00f3digo de origem */
   botoes.forEach(function (b) {
     b.addEventListener('click', function () {
       var r = calcular();
@@ -2111,7 +2111,7 @@ DLAJS;
 
 	function dla_orcamento_css() {
 		return <<<'DLACSS'
-/* Dedicada Lavanderia · Orçamento rápido. Tudo dentro de .dlo, nas cores do site (preto, branco e cinza). */
+/* Dedicada Lavanderia \0000b7 Or\0000e7amento r\0000e1pido. Tudo dentro de .dlo, nas cores do site (preto, branco e cinza). */
 .dlo {
   --dlo-preto: #111; --dlo-texto: #1a1a1a; --dlo-suave: #4a4a4a; --dlo-borda: #bdbdbd;
   --dlo-claro: #f3f3f3; --dlo-medio: #e6e6e6; --dlo-whats: #1f7a3f;
@@ -2132,7 +2132,7 @@ DLAJS;
 }
 .dlo-grupo > summary::-webkit-details-marker { display: none; }
 .dlo-grupo > summary::after { content: "+"; font-size: 22px; line-height: 1; }
-.dlo-grupo[open] > summary::after { content: "−"; }
+.dlo-grupo[open] > summary::after { content: "\002212"; }
 .dlo-grupo-nota { margin: -4px 16px 8px; font-size: 14px; color: var(--dlo-suave); }
 .dlo-itens { list-style: none; margin: 0; padding: 0 8px 8px; }
 .dlo-item {
