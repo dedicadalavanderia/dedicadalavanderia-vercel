@@ -44,7 +44,12 @@
     codigo = codigo || gerar();
     var nome = pagina();
     var marca = 'c\u00f3digo ' + codigo + (nome === null ? ', p\u00e1gina inicial' : ', p\u00e1gina: ' + nome);
-    var novo = texto.replace(/\s+$/, '') ? texto.replace(/\s+$/, '') + ' (' + marca + ')' : 'Ol\u00e1! Vim pelo site da Dedicada (' + marca + ').';
+    // Texto de uma linha: o c\u00f3digo vai no fim. Modelo de v\u00e1rias linhas (com campos para preencher no fim):
+    // o c\u00f3digo vai numa linha logo depois da primeira, para n\u00e3o ficar no lugar onde a pessoa escreve.
+    var limpo = texto.replace(/\s+$/, ''), linhas = limpo.split('\n'), novo;
+    if (!limpo) novo = 'Ol\u00e1! Vim pelo site da Dedicada (' + marca + ').';
+    else if (linhas.length > 1) { linhas.splice(1, 0, '(' + marca + ')'); novo = linhas.join('\n'); }
+    else novo = limpo + ' (' + marca + ')';
     // Monta a consulta \u00e0 m\u00e3o, com %20 nos espa\u00e7os (o "+" aparece literal em alguns aplicativos).
     var partes = [];
     u.searchParams.forEach(function (v, k) { if (k !== 'text') partes.push(encodeURIComponent(k) + '=' + encodeURIComponent(v)); });
