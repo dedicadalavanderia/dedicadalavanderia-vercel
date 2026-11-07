@@ -528,14 +528,26 @@ if ( ! function_exists( 'ded_blog_mapa' ) ) {
 		return $content . "\n" . ded_blog_mais( $rel, $tema );
 	}
 
-	function ded_blog_paginada( $content ) {
-		if ( ! ded_blog_ligado() || is_admin() || is_feed() || ! is_page( 916 ) || ! in_the_loop() || ! is_main_query() ) {
-			return $content;
+	// O modelo blog-masonry.php do tema monta o texto da pagina fora do loop (apply_filters direto) e depois troca a consulta
+	// principal pela lista dos posts: a pagina da lista fica marcada antes, no template_redirect.
+	function ded_blog_paginada_marcar() {
+		if ( ! ded_blog_ligado() || is_admin() || is_feed() || ! is_page( 916 ) ) {
+			return;
 		}
 		$pg = (int) get_query_var( 'paged' );
 		if ( $pg < 2 ) {
+			$pg = (int) get_query_var( 'page' );
+		}
+		if ( $pg >= 2 ) {
+			$GLOBALS['ded_blog_pag'] = $pg;
+		}
+	}
+
+	function ded_blog_paginada( $content ) {
+		if ( empty( $GLOBALS['ded_blog_pag'] ) || 916 !== (int) get_the_ID() ) {
 			return $content;
 		}
+		$pg  = (int) $GLOBALS['ded_blog_pag'];
 		$s   = ded_blog_site();
 		$sep = ' <span aria-hidden="true">&rsaquo;</span> ';
 		return '<style>' . "h1.ded-bl-h1{margin:0 0 14px;font-family:Montserrat,sans-serif;font-size:24px;line-height:36px;font-weight:400;letter-spacing:5px;text-transform:uppercase;color:#303030}.ded-bl-pag{max-width:900px;margin:40px auto 30px;padding:0 20px;text-align:center}.ded-bl-pag .ded-trilha{margin:0 auto 24px}.ded-bl-pag p a{color:#1e4468 !important;text-decoration:underline;text-underline-offset:3px}@media (max-width:768px){h1.ded-bl-h1{font-size:19px;line-height:28px;letter-spacing:3px}}" . '</style><div class="ded-bl-pag">'
@@ -632,6 +644,7 @@ if ( ! function_exists( 'ded_blog_mapa' ) ) {
 
 	add_filter( 'the_content', 'ded_blog_conteudo', 99990 );
 	add_filter( 'the_content', 'ded_blog_paginada', 99991 );
+	add_action( 'template_redirect', 'ded_blog_paginada_marcar' );
 	add_action( 'wp_head', 'ded_blog_css', 20 );
 	add_action( 'loop_start', 'ded_blog_buffer_inicio', 1 );
 	add_action( 'loop_end', 'ded_blog_buffer_fim', 999 );
