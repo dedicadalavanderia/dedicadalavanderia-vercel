@@ -382,17 +382,18 @@ if ( ! function_exists( 'ded_blog_mapa' ) ) {
 		$t     = ded_blog_temas();
 		$dp    = ded_blog_data( $pub );
 		$dm    = ded_blog_data( $mod );
-		$datas = '';
+		$datas = array();
 		if ( $dp ) {
-			$datas .= ' &middot; Publicado em <time datetime="' . esc_attr( $dp[0] ) . '">' . esc_html( $dp[1] ) . '</time>';
+			$datas[] = '<span class="ded-blog-nw">Publicado em <time datetime="' . esc_attr( $dp[0] ) . '">' . esc_html( $dp[1] ) . '</time></span>';
 		}
 		if ( $dm && ( ! $dp || $dm[0] !== $dp[0] ) ) {
-			$datas .= ' &middot; Atualizado em <time datetime="' . esc_attr( $dm[0] ) . '">' . esc_html( $dm[1] ) . '</time>';
+			$datas[] = '<span class="ded-blog-nw">Atualizado em <time datetime="' . esc_attr( $dm[0] ) . '">' . esc_html( $dm[1] ) . '</time></span>';
 		}
 		return '<div class="ded-blog-assina"><img src="' . esc_url( $s . $a['foto'] ) . '" alt="" width="48" height="48" decoding="async">'
 			. '<p><span class="ded-blog-por">Por <a href="' . esc_url( $s . '/sobre/#equipe' ) . '"><strong>' . esc_html( $a['nome'] )
 			. '</strong></a>, ' . esc_html( $a['cargo'] ) . ' da Dedicada Lavanderia</span>'
-			. '<span class="ded-blog-meta">' . ded_blog_link( $s . '/blog/#' . $tema, $t[ $tema ]['nome'] ) . $datas . '</span></p></div>';
+			. '<span class="ded-blog-meta">' . ded_blog_link( $s . '/blog/#' . $tema, $t[ $tema ]['nome'] ) . '</span>'
+			. ( $datas ? '<span class="ded-blog-meta">' . implode( ' &middot; ', $datas ) . '</span>' : '' ) . '</p></div>';
 	}
 
 	function ded_blog_mais( $rel, $tema ) {
@@ -552,7 +553,7 @@ if ( ! function_exists( 'ded_blog_mapa' ) ) {
 		if ( ! isset( $m[ (int) get_queried_object_id() ] ) ) {
 			return;
 		}
-		echo '<style id="ded-blog-css">' . ".ded-blog-trilha{max-width:none;margin:0 0 12px;text-align:left}.ded-blog-assina{display:flex;align-items:center;gap:12px;margin:0 0 18px}.ded-blog-assina img{width:48px;height:48px;border-radius:50%;flex:0 0 48px;object-fit:cover;margin:0}.ded-blog-assina p{margin:0;font-size:14px;line-height:1.5}.ded-blog-assina span{display:block}.ded-blog-meta{font-size:13px;color:#555}.ded-blog-assina a,.ded-blog-mais p a{color:#1e4468 !important;text-decoration:underline;text-underline-offset:3px}.ded-blog-mais{margin:40px 0 10px}.ded-blog-mais .ded-leia{max-width:none}.ded-blog-mais p{margin:14px 0 0}.ded-blog-trilha a:focus-visible,.ded-blog-assina a:focus-visible,.ded-blog-mais a:focus-visible{outline:3px solid #1e4468;outline-offset:3px}" . "</style>\n";
+		echo '<style id="ded-blog-css">' . ".ded-trilha.ded-blog-trilha{max-width:none;margin:0 0 12px;text-align:left}.ded-blog-assina{display:flex;align-items:center;gap:12px;margin:0 0 18px}.ded-blog-assina img{width:48px;height:48px;border-radius:50%;flex:0 0 48px;object-fit:cover;margin:0}.ded-blog-assina p{margin:0;font-size:14px;line-height:1.5}.ded-blog-assina p>span{display:block}.ded-blog-nw{white-space:nowrap}.ded-blog-meta{font-size:13px;color:#555}.ded-blog-assina a,.ded-blog-mais p a{color:#1e4468 !important;text-decoration:underline;text-underline-offset:3px}.ded-blog-mais{margin:40px 0 10px}.ded-blog-mais .ded-leia{max-width:none}.ded-blog-mais p{margin:14px 0 0}.ded-blog-trilha a:focus-visible,.ded-blog-assina a:focus-visible,.ded-blog-mais a:focus-visible{outline:3px solid #1e4468;outline-offset:3px}" . "</style>\n";
 	}
 
 	// Trocas no HTML do tema em volta do texto (so no post do mapa, so entre o comeco e o fim do loop principal).
