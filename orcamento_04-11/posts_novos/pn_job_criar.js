@@ -16,12 +16,14 @@ window.__jobPN1 = {inicio: new Date().toLocaleTimeString('pt-BR'), feito: false,
     sessionStorage.setItem('ded_nonce', n);
     const H = {'X-WP-Nonce': n}, HJ = {'X-WP-Nonce': n, 'Content-Type': 'application/json'};
     J.etapa = 'links';
-    for (const u of LINKS) {
+    if (window.__pn1LinksOk) J.res.links = 'conferidos antes (' + window.__pn1LinksOk + ')';
+    else for (const u of LINKS) {
       const r = await dedRL(u + '?nc=' + Date.now(), {credentials: 'omit', cache: 'no-store', redirect: 'follow'});
       const final = r.url.split('?')[0];
       J.res.links.push([u, r.status, final === SITE + u ? '' : final]);
       if (r.status !== 200 || final !== SITE + u) throw new Error('link ' + u + ': ' + r.status + ' ' + final);
     }
+    if (!window.__pn1LinksOk) window.__pn1LinksOk = new Date().toLocaleTimeString('pt-BR');
     J.etapa = 'imagens';
     for (const im of IMGS) {
       const base = im.nome.replace(/\.webp$/, '');
@@ -33,8 +35,11 @@ window.__jobPN1 = {inicio: new Date().toLocaleTimeString('pt-BR'), feito: false,
         const buf = await fetch(RAW + 'imagens/' + im.nome, {cache: 'no-store'}).then(r => r.arrayBuffer());
         const sha = await sha16bin(buf);
         if (sha !== im.sha || buf.byteLength !== im.bytes) throw new Error('imagem baixada diferente: ' + im.nome + ' ' + sha);
-        const r = await dedRL('/wp-json/wp/v2/media', {method: 'POST', headers: {'X-WP-Nonce': n, 'Content-Type': 'image/webp', 'Content-Disposition': 'attachment; filename="' + im.nome + '"'}, credentials: 'include', body: new Blob([buf], {type: 'image/webp'})});
-        const j = await r.json();
+        const fd = new FormData();
+        fd.append('file', new File([buf], im.nome, {type: 'image/webp'})); fd.append('title', im.titulo); fd.append('alt_text', im.alt);
+        const r = await dedRL('/wp-json/wp/v2/media', {method: 'POST', headers: H, credentials: 'include', body: fd});
+        const txt = await r.text();
+        let j; try { j = JSON.parse(txt); } catch (e) { throw new Error('subir ' + im.nome + ': HTTP ' + r.status + ' resposta nao JSON: ' + txt.slice(0, 160)); }
         if (!r.ok || !j.id) throw new Error('subir ' + im.nome + ': HTTP ' + r.status + ' ' + JSON.stringify(j).slice(0, 200));
         id = j.id;
         if (j.source_url.split('/').pop() !== im.nome) throw new Error('nome mudou no upload: ' + j.source_url);
