@@ -565,23 +565,40 @@ if ( ! function_exists( 'ded_blog_mapa' ) ) {
 		if ( ! isset( $m[ $id ] ) ) {
 			return $html;
 		}
+		// O tema escreve atributos (itemprop) que um filtro tira depois deste buffer: os padroes aceitam atributos a mais.
 		$n    = 0;
-		$novo = preg_replace( '#<div class="post_info">.*?<div class="blog_like">.*?</div>\s*</div>#s', '', $html, 1, $n );
+		$novo = preg_replace( '#<div\b[^>]*\bclass="post_info"[^>]*>.*?<div\b[^>]*\bclass="blog_like"[^>]*>.*?</div>\s*</div>#s', '', $html, 1, $n );
 		if ( ! is_string( $novo ) || ! $n ) {
-			$novo = preg_replace( '#<div class="post_info">(?:(?!</?div\b).)*</div>#s', '', $html, 1, $n );
+			$novo = preg_replace( '#<div\b[^>]*\bclass="post_info"[^>]*>(?:(?!</?div\b).)*</div>#s', '', $html, 1, $n );
 		}
 		if ( is_string( $novo ) && $n ) {
 			$html = $novo;
 		}
 		$trilha = ded_blog_trilha_html( $m[ $id ][0] );
-		$novo   = preg_replace( '#<h2\s+class="entry_title">\s*<span\s+class="date entry_date updated">.*?</span>\s*#s', ded_blog_rep( $trilha . '<h2 class="entry_title">' ), $html, 1, $n );
+		$novo   = preg_replace_callback(
+			'#(<h2\b[^>]*\bclass="entry_title"[^>]*>)\s*<span\b[^>]*\bclass="date entry_date updated"[^>]*>.*?</span>\s*#s',
+			function ( $mm ) use ( $trilha ) {
+				return $trilha . $mm[1];
+			},
+			$html,
+			1,
+			$n
+		);
 		if ( ! is_string( $novo ) || ! $n ) {
-			$novo = preg_replace( '#<h2\s+class="entry_title">#', ded_blog_rep( $trilha . '<h2 class="entry_title">' ), $html, 1, $n );
+			$novo = preg_replace_callback(
+				'#<h2\b[^>]*\bclass="entry_title"[^>]*>#',
+				function ( $mm ) use ( $trilha ) {
+					return $trilha . $mm[0];
+				},
+				$html,
+				1,
+				$n
+			);
 		}
 		if ( is_string( $novo ) && $n ) {
 			$html = $novo;
 		}
-		$novo = preg_replace( '#<div class="single_tags clearfix">\s*<div class="tags_text">.*?</div>\s*</div>#s', '', $html, 1, $n );
+		$novo = preg_replace( '#<div\b[^>]*\bclass="single_tags clearfix"[^>]*>\s*<div\b[^>]*\bclass="tags_text"[^>]*>.*?</div>\s*</div>#s', '', $html, 1, $n );
 		if ( is_string( $novo ) && $n ) {
 			$html = $novo;
 		}
