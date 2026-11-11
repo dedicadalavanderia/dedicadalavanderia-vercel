@@ -1,0 +1,56 @@
+// 698 (11/11/2026; o dono as 17h48, "ok"): as paginas fixas sem dateModified e sem lastReviewed no JSON-LD; a 5883 sem a data na tela.
+(() => {
+if (window.__job698 && window.__job698.feito === false) return 'ja em andamento: nada feito';
+window.__job698 = {inicio: new Date().toLocaleTimeString('pt-BR'), feito: false, etapa: '', res: [], ver: {}};
+(async () => {
+  const J = window.__job698;
+  const D = {"paginas":[{"id":501,"url":"/servicos/","de":"8d7e91c7417498cc","para":"4170c76de24e8eb8","extra":""},{"id":562,"url":"/contato/","de":"5fec3d48ba389afe","para":"a9174880009bcc4e","extra":""},{"id":607,"url":"/sobre/","de":"21fd66ca46c9a743","para":"19a57b5f45df7b32","extra":""},{"id":685,"url":"/limpeza-em-agua-wet-cleaning/","de":"f73f07bd37f9dc43","para":"7fbe553a2864fa2f","extra":""},{"id":916,"url":"/blog/","de":"b250b8619fbd1672","para":"0546599921fd3acf","extra":""},{"id":1150,"url":"/lavanderia-coleta-e-entrega-em-florianopolis/","de":"f177a92c5c537282","para":"905aa27b5b060e4b","extra":""},{"id":1374,"url":"/servicos/lavagem-de-edredom-pet-em-florianopolis/","de":"8b02eca77c4e2793","para":"3082760734ed4984","extra":""},{"id":1376,"url":"/servicos/remocao-de-manchas-dificeis-em-florianopolis/","de":"ed95b365f62bdaa0","para":"ade63a1b15500a4e","extra":""},{"id":1398,"url":"/servicos/limpeza-de-cortinas-em-florianopolis/","de":"3256fe68a2bf182d","para":"88480c0414397154","extra":""},{"id":1537,"url":"/lavanderia-no-centro-de-florianopolis/","de":"58bc625b511c1446","para":"5dbc07537d2f15c6","extra":""},{"id":1568,"url":"/lavanderia-na-agronomica/","de":"8d0b55c4d1daea2b","para":"cf31044b77c8347e","extra":""},{"id":1570,"url":"/lavanderia-em-cacupe/","de":"112a153b19ef1284","para":"7608843420b5f8b7","extra":""},{"id":1574,"url":"/lavanderia-em-jurere/","de":"5506d39ad2240e7c","para":"7c1ff2e6a0d43083","extra":""},{"id":1578,"url":"/lavanderia-em-ratones/","de":"bfa88266d035ce90","para":"3b246f091b83abb0","extra":""},{"id":1580,"url":"/lavanderia-no-pantanal/","de":"7461e7d097240baa","para":"f9a74e0986514d7e","extra":""},{"id":1584,"url":"/lavanderia-na-trindade/","de":"156e3dbc7431b732","para":"ae6e9c85a02bfa72","extra":""},{"id":1590,"url":"/lavanderia-na-carvoeira/","de":"2a4b8cedc0bcb5f0","para":"84095795b1083a98","extra":""},{"id":1592,"url":"/lavanderia-no-itacorubi/","de":"4cba512d88d4d09b","para":"63d50574cc5469ba","extra":""},{"id":1596,"url":"/lavanderia-no-joao-paulo/","de":"738bf2ce330506aa","para":"cb8e084cc44ddb0d","extra":""},{"id":1598,"url":"/lavanderia-no-monte-verde/","de":"188ccc3363c3dcd9","para":"22341018ce76cef5","extra":""},{"id":1600,"url":"/lavanderia-no-saco-grande/","de":"386546a9a4aaaa9d","para":"b5873f0d337457bf","extra":""},{"id":1602,"url":"/lavanderia-no-santa-monica/","de":"0996314f4f5e6dc1","para":"d1985d29ca7eb1c1","extra":""},{"id":1607,"url":"/lavanderia-no-corrego-grande/","de":"61d63b3e7e4ba498","para":"e7a913809af9fe3f","extra":""},{"id":1609,"url":"/lavanderia-na-lagoa-da-conceicao/","de":"7ccd424432bb4202","para":"16683ff520d2d9ea","extra":""},{"id":1611,"url":"/lavanderia-em-coqueiros/","de":"219ec733e62d8b00","para":"ea3ebc6b4d3011d7","extra":""},{"id":1613,"url":"/lavanderia-em-campinas-sao-jose/","de":"a91e5bc0965559cf","para":"f86fa363a3d56b80","extra":""},{"id":1617,"url":"/lavanderia-em-santo-antonio-de-lisboa/","de":"aa1557ce9a906911","para":"aee59c09d17e5242","extra":""},{"id":1619,"url":"/lavanderia-no-parque-sao-jorge/","de":"bd354e1e6b2cdaec","para":"1bbd8f7c6a2f8765","extra":""},{"id":1621,"url":"/lavanderia-no-estreito/","de":"6156442486874f21","para":"eac84f38a503e2f6","extra":""},{"id":1689,"url":"/pacotes/","de":"e97e214961f8efd1","para":"cc6c1b4a4f58ec8d","extra":""},{"id":3146,"url":"/orcamento/","de":"ad04e0ac20b30e1e","para":"5cffffea07c3a830","extra":""},{"id":3165,"url":"/diagnostico-de-manchas/","de":"6fbbf752dadfdbaf","para":"3090dd9488e76d4c","extra":""},{"id":3799,"url":"/servicos/lavagem-de-edredom-em-florianopolis/","de":"81450343a22c21b7","para":"b74864c062e6aa33","extra":""},{"id":3883,"url":"/servicos/lavagem-de-terno-a-seco-em-florianopolis/","de":"c4a4e2d5d7fd44d1","para":"bdbda8b8dab50285","extra":""},{"id":3952,"url":"/servicos/lavar-e-passar-camisa-social-em-florianopolis/","de":"e3ccc56a39e116a9","para":"fc2f4d1bd4a4cb87","extra":""},{"id":4045,"url":"/servicos/lavagem-de-roupa-de-cama-mesa-e-banho-em-florianopolis/","de":"3a8dbd1e9eb7b214","para":"081600cff26b2587","extra":""},{"id":4107,"url":"/servicos/lavagem-de-tenis-em-florianopolis/","de":"431b60e4b8ecdc8a","para":"f5b551eeb954493d","extra":""},{"id":4118,"url":"/servicos/lavanderia-para-airbnb-em-florianopolis/","de":"9d6d112186a5e2cb","para":"836b2061c4dd9054","extra":""},{"id":4121,"url":"/servicos/lavagem-de-vestido-de-noiva-em-florianopolis/","de":"4d0b03b846a07050","para":"428b1f92ffa360f6","extra":""},{"id":4124,"url":"/servicos/lavagem-de-vestido-de-festa-em-florianopolis/","de":"96726d811d48705a","para":"d1897b6b93a453f2","extra":""},{"id":4223,"url":"/servicos/lavagem-de-couro-em-florianopolis/","de":"934c3536e59680a9","para":"a26b901d0b688e40","extra":""},{"id":4243,"url":"/servicos/lavagem-de-roupas-finas-em-florianopolis/","de":"0f843b0dc8b19a39","para":"abbc046b1532f05f","extra":""},{"id":4578,"url":"/servicos/lavagem-de-casacos-e-jaquetas-em-florianopolis/","de":"3d40f81731d0a75c","para":"359d515dee229f78","extra":""},{"id":4581,"url":"/servicos/higienizacao-de-carrinho-de-bebe-em-florianopolis/","de":"2f12d5ae6539defc","para":"247b6d7729265dcc","extra":""},{"id":4583,"url":"/servicos/lavagem-de-roupa-de-bebe-em-florianopolis/","de":"7989ec7596181dae","para":"a0835bfe90139215","extra":""},{"id":4588,"url":"/servicos/lavagem-de-pelucias-e-fantasias-em-florianopolis/","de":"71c240cac1f854d8","para":"5909a19825a3e710","extra":""},{"id":4590,"url":"/servicos/lavagem-de-uniformes-e-jalecos-em-florianopolis/","de":"c684497e7adc9d68","para":"48ca2c309b78be27","extra":""},{"id":4596,"url":"/servicos/passadoria-de-roupas-em-florianopolis/","de":"006ad86d9993849a","para":"70afb7398bb8016d","extra":""},{"id":4598,"url":"/servicos/lavagem-a-seco-em-florianopolis/","de":"b0623c33122b7e69","para":"d587d147326427fc","extra":""},{"id":5192,"url":"/lavanderia-em-canasvieiras/","de":"163b591f09ad7bd4","para":"d54bffd28bd0a052","extra":""},{"id":5437,"url":"/servicos/lavanderia-expressa-em-florianopolis/","de":"d21dae184c98a6af","para":"5131fb725af927ee","extra":""},{"id":5803,"url":"/cuidados-vestido-de-noiva/","de":"f9128dc3b9926492","para":"b9905af7f16e98fa","extra":""},{"id":5812,"url":"/cuidados-roupa-de-bebe/","de":"c81bcf8c8d007f9a","para":"dd4cc5ec7be6a404","extra":""},{"id":5847,"url":"/convenios/","de":"d6e24dd9fbe26363","para":"576713f2225433b2","extra":""},{"id":5876,"url":"/como-funciona/","de":"b9b5bad15df082d3","para":"a5fe83d4e70f5179","extra":""},{"id":5883,"url":"/qual-lavanderia-escolher/","de":"0b87ac4625865a40","para":"57f7e0ce29e57b8a","extra":"[vc_column_text]\n<p class=\"ded-cp-data\">Compara\u00e7\u00e3o atualizada em <time datetime=\"2026-10-29\">29 de outubro de 2026</time>.</p>\n[/vc_column_text][vc_empty_space height=\"20\"]"},{"id":5888,"url":"/maquina-de-lavar-quebrou/","de":"c3985b318e21f3c4","para":"96f51214e10255d4","extra":""},{"id":5893,"url":"/roupa-de-enchente-ou-alagamento/","de":"a3013b2fb4777014","para":"fd3a1885bfea95b6","extra":""},{"id":5986,"url":"/garantia/","de":"0b51e79779d061a3","para":"ec83e6eb09adb64f","extra":""},{"id":6054,"url":"/avaliacoes/","de":"c7d62253e073bce4","para":"4709bd425c6e85d6","extra":""},{"id":6064,"url":"/faq-perguntas-frequentes/","de":"c4e394acceee9e29","para":"551d1d22cf296475","extra":""},{"id":6073,"url":"/para-empresas/","de":"9d532c50f690e4c3","para":"903745f973ea747e","extra":""},{"id":6138,"url":"/para-idosos/","de":"c113f2dcf2aff872","para":"0938a005b0356870","extra":""},{"id":6144,"url":"/indique/","de":"3f6eab3f1f15de75","para":"6da597d5142fb6f8","extra":""},{"id":6149,"url":"/vale-presente/","de":"8bd227fff04f264f","para":"31933995d958f0be","extra":""},{"id":6152,"url":"/trabalhe-conosco/","de":"3f58608d1bb67a7e","para":"b24f703841e20df4","extra":""},{"id":6157,"url":"/calendario-da-lavanderia/","de":"1d205d5f0cf1982a","para":"f8c3dedeb9d74f58","extra":""},{"id":6163,"url":"/sustentabilidade/","de":"356032dd477be917","para":"40a1de5f3349ce86","extra":""},{"id":6168,"url":"/acessibilidade/","de":"2571854e4ad53e07","para":"83e3b91cb35a6eca","extra":""}]};
+  const RE_CHAVE = /,\s*"(?:dateModified|lastReviewed)"\s*:\s*"[^"]*"/g;
+  const RE_BLOCO = /(<script[^>]*application\/ld\+json[^>]*>)([\s\S]*?)(<\/script>)/g;
+  const troca = (t) => t.replace(RE_BLOCO, (m, a, b, c) => a + b.replace(RE_CHAVE, '') + c);
+  try {
+    J.etapa = 'nonce';
+    const rn = await dedRL('/wp-admin/admin-ajax.php?action=rest-nonce', {credentials: 'include'});
+    const n = (await rn.text()).trim();
+    if (!/^[a-f0-9]{10}$/.test(n)) throw new Error('nonce invalido');
+    sessionStorage.setItem('ded_nonce', n);
+    for (const p of D.paginas) {
+      const R = {id: p.id};
+      J.res.push(R);
+      J.etapa = 'pagina ' + p.id;
+      const a = await dedLer2('pages', p.id);
+      R.antes = a.sha;
+      if (a.st !== 'publish') throw new Error(p.id + ' nao publicada: ' + a.st);
+      if (a.sha === p.para) { R.res = 'ja estava'; continue; }
+      if (a.sha !== p.de) throw new Error(p.id + ' com sha diferente: ' + a.sha);
+      let novo = troca(a.raw);
+      if (p.extra) {
+        if (novo.split(p.extra).length !== 2) throw new Error(p.id + ': bloco da data visivel nao aparece 1 vez');
+        novo = novo.replace(p.extra, () => '');
+      }
+      const s = await dedSha16(novo);
+      if (s !== p.para) throw new Error(p.id + ': sha depois diferente do esperado: ' + s);
+      const g = await dedGravar2('pages', p.id, novo, p.para);
+      R.gravar = [g.status, g.relido_sha, g.ok];
+      if (!g.ok) throw new Error(p.id + ' nao ficou: ' + JSON.stringify(g));
+    }
+    J.etapa = 'cache';
+    J.res.cache = (await dedRL('/wp-admin/index.php?nfd_purge_all=1', {credentials: 'include'})).status;
+    J.etapa = 'conferencia sem login';
+    for (const p of D.paginas) {
+      const r = await dedRL(p.url + '?nc=' + Date.now(), {credentials: 'omit', cache: 'no-store'});
+      const h = await r.text();
+      const bl = [...h.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g)].map(x => x[1]);
+      let ent = 0, erros = 0;
+      for (const b of bl) { ent += (b.match(/&#\d+;|&[a-zA-Z]+;/g) || []).length; try { JSON.parse(b); } catch (e) { erros++; } }
+      const todo = bl.join(' ');
+      const V = {st: r.status, blocos: bl.length, json_erros: erros, entidades: ent, mod: (todo.match(/"dateModified"/g) || []).length, rev: (todo.match(/"lastReviewed"/g) || []).length, pub: (todo.match(/"datePublished"/g) || []).length, data_tela: (h.match(/class="ded-cp-data"/g) || []).length};
+      J.ver[p.id] = V;
+      if (r.status !== 200 || erros || ent || V.mod || V.rev || V.data_tela) throw new Error('conferencia falhou em ' + p.id + ': ' + JSON.stringify(V));
+    }
+    J.etapa = 'fim';
+  } catch (e) { J.erro = String(e); }
+  J.feito = true; J.fim = new Date().toLocaleTimeString('pt-BR');
+})();
+return 'iniciado';
+})()
